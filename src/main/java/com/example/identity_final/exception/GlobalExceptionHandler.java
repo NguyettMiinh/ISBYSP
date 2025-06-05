@@ -31,8 +31,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    ResponseEntity<String> handlingValidation(MethodArgumentNotValidException exception) {
-        return ResponseEntity.badRequest().body(exception.getFieldError().getDefaultMessage());
+    ResponseEntity<ApiResponse> handlingValidation(MethodArgumentNotValidException exception) {
+        //tra ve message o trong UserCreationRequest cua tung validtion vidu: USER_NAME
+        String enumKey = exception.getFieldError().getDefaultMessage();
+        //dung valueOf de chuyen chuoi thanh hang so, nay no se tra ve Errorcode.USER_NAME
+        ErrorCode errorCode = ErrorCode.valueOf(enumKey);
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setCode(errorCode.getCode());
+        apiResponse.setMessage(errorCode.getMessage());
+        return ResponseEntity.badRequest().body(apiResponse);
     }
 
 }
