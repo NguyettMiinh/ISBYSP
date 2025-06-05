@@ -12,6 +12,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,16 +26,20 @@ public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
 
-    public User createUser(UserCreationRequest request) {
+    public UserResponse createUser(UserCreationRequest request) {
         if(userRepository.existsByUsername(request.getUsername())) {
             //RuntimeException no chi nhan String
             throw new AppException(ErrorCode.USER_EXIST);
         }
         //map du lieu
         User user = userMapper.toUser(request);
+        //ma hoa va giai ma duoi 1s
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        //ma hoa
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         //luu vao trong db
-        return userRepository.save(user);
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
     public List<User> getUsers(){
