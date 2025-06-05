@@ -5,6 +5,7 @@ import com.example.identity_final.Service.UserService;
 import com.example.identity_final.dto.request.UserCreationRequest;
 import com.example.identity_final.dto.request.UserUpdateRequest;
 import com.example.identity_final.dto.response.ApiResponse;
+import com.example.identity_final.dto.response.UserResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +33,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable("id") Long id){
+    public UserResponse getUser(@PathVariable("id") Long id){
         return userService.getUser(id);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable("id") Long id, @RequestBody UserUpdateRequest request){
+    public UserResponse updateUser(@PathVariable("id") Long id, @RequestBody UserUpdateRequest request){
         return userService.updateUser(id,request);
     }
 

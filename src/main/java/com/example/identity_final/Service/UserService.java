@@ -4,6 +4,7 @@ import com.example.identity_final.Entity.User;
 import com.example.identity_final.Repository.UserRepository;
 import com.example.identity_final.dto.request.UserCreationRequest;
 import com.example.identity_final.dto.request.UserUpdateRequest;
+import com.example.identity_final.dto.response.UserResponse;
 import com.example.identity_final.exception.AppException;
 import com.example.identity_final.exception.ErrorCode;
 import com.example.identity_final.mapper.UserMapper;
@@ -34,17 +35,20 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUser(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("user not found"));
+    public UserResponse getUser(Long id) {
+        return userMapper.toUserResponse(userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("user not found")));
     }
 
-    public User updateUser(Long id, UserUpdateRequest request) {
-        User user = getUser(id);
-        userMapper.updateuser(user, request);
-        return userRepository.save(user);
+    public UserResponse updateUser(Long id, UserUpdateRequest request) {
+        User user = userRepository.findById(id)
+                                    .orElseThrow(() -> new RuntimeException("user not found"));
+        userMapper.updateUser(user, request);
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+    // o tang service, khi tra ve data cho tang controller, khong tra ve "Entity", can tra ve dto.response
 }
