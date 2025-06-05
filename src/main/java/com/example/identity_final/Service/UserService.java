@@ -4,6 +4,8 @@ import com.example.identity_final.Entity.User;
 import com.example.identity_final.Repository.UserRepository;
 import com.example.identity_final.dto.request.UserCreationRequest;
 import com.example.identity_final.dto.request.UserUpdateRequest;
+import com.example.identity_final.exception.AppException;
+import com.example.identity_final.exception.ErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,8 @@ public class UserService {
         User user = new User();
 
         if(userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("User existed.");
+            //RuntimeException no chi nhan String
+            throw new AppException(ErrorCode.USER_EXIST);
         }
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());
