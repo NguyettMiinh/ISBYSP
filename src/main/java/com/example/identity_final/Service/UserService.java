@@ -8,17 +8,22 @@ import com.example.identity_final.dto.response.UserResponse;
 import com.example.identity_final.exception.AppException;
 import com.example.identity_final.exception.ErrorCode;
 import com.example.identity_final.mapper.UserMapper;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
-    @Autowired
+
     UserRepository userRepository;
-    @Autowired
     UserMapper userMapper;
+
     public User createUser(UserCreationRequest request) {
         if(userRepository.existsByUsername(request.getUsername())) {
             //RuntimeException no chi nhan String
@@ -51,4 +56,6 @@ public class UserService {
         userRepository.deleteById(id);
     }
     // o tang service, khi tra ve data cho tang controller, khong tra ve "Entity", can tra ve dto.response
+    //autowired ko phai la best pratice de inject bean vao class, ngta khuyen khich dungf contructor de inject bean
+    //su dung lombok
 }
