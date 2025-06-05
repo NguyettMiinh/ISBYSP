@@ -17,7 +17,7 @@ public class UserCreationRequest {
     //validate o file request va valid dau vao o controller
     @Size(min = 5, message = "USERNAME_INVALID")
     String username;
-    @Size(min = 8, message = "Password must be at least 8 characters")
+    @Size(min = 8, message = "PASSWORD_INVALID")
     String password;
     String firstName;
     String lastName;

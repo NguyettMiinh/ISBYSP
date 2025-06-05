@@ -35,7 +35,15 @@ public class GlobalExceptionHandler {
         //tra ve message o trong UserCreationRequest cua tung validtion vidu: USER_NAME
         String enumKey = exception.getFieldError().getDefaultMessage();
         //dung valueOf de chuyen chuoi thanh hang so, nay no se tra ve Errorcode.USER_NAME
-        ErrorCode errorCode = ErrorCode.valueOf(enumKey);
+
+        //gan gia tri default cho loi neu sai key, de no ko bi loi khi tra ve neu key sai
+        ErrorCode errorCode = ErrorCode.INVALID_KEY;
+        try{
+            //neu co key hop le thi bat trong nay
+            errorCode = ErrorCode.valueOf(enumKey);
+        } catch (IllegalArgumentException e){
+
+        }
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setCode(errorCode.getCode());
         apiResponse.setMessage(errorCode.getMessage());
