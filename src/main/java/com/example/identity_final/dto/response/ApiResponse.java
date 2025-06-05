@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class ApiResponse <T>{
     //chuan hoa response  tra ve
-    private int code;
+    private int code = 200;
     private String message;
     private T result;
 
