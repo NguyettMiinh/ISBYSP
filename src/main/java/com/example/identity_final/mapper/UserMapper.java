@@ -12,5 +12,9 @@ public interface UserMapper {
     User toUser(UserCreationRequest request);
     //map userupdaterequest vao user
     void updateUser(@MappingTarget User user, UserUpdateRequest request);
+
+    // chuyen doi tuong user thanh userResponse
+//    Khi bạn gọi toUserResponse(user), MapStruct sẽ tự động ánh xạ các field phù hợp,
+//    và bỏ qua password, createdAt vì UserResponse không chứa chúng.
     UserResponse toUserResponse(User user);
 }
