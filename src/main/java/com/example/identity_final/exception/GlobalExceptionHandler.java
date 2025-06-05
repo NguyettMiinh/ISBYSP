@@ -14,14 +14,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = RuntimeException.class)
     ResponseEntity<ApiResponse> handlingRuntimeException(RuntimeException exception) {
         ApiResponse apiResponse = new ApiResponse();
-        //hard code and message, we need a enum errorcode (constant) to get code and message, can resue code
         apiResponse.setCode(401);
         apiResponse.setMessage(exception.getMessage());
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    ResponseEntity<ApiResponse> handlingValidation(MethodArgumentNotValidException exception) {
+    ResponseEntity<String> handlingValidation(MethodArgumentNotValidException exception) {
         return ResponseEntity.badRequest().body(exception.getFieldError().getDefaultMessage());
     }
 
