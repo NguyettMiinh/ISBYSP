@@ -6,6 +6,7 @@ import com.example.identity_final.dto.request.UserCreationRequest;
 import com.example.identity_final.dto.request.UserUpdateRequest;
 import com.example.identity_final.exception.AppException;
 import com.example.identity_final.exception.ErrorCode;
+import com.example.identity_final.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,19 +16,15 @@ import java.util.List;
 public class UserService {
     @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    UserMapper userMapper;
     public User createUser(UserCreationRequest request) {
-        User user = new User();
-
         if(userRepository.existsByUsername(request.getUsername())) {
             //RuntimeException no chi nhan String
             throw new AppException(ErrorCode.USER_EXIST);
         }
-        user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
-        user.setLastName(request.getLastName());
-        user.setFirstName(request.getFirstName());
-        user.setDob(request.getDob());
+        //map du lieu
+        User user = userMapper.toUser(request);
 
         //luu vao trong db
         return userRepository.save(user);
