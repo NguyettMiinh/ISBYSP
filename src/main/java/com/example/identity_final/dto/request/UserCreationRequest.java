@@ -1,5 +1,6 @@
 package com.example.identity_final.dto.request;
 
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +14,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
+    //validate o file request va valid dau vao o controller
+    @Size(min = 8, message = "Username must be at least 8 characters")
     String username;
     String password;
     String firstName;
