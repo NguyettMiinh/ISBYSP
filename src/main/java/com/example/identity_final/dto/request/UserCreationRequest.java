@@ -15,8 +15,9 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
     //validate o file request va valid dau vao o controller
-    @Size(min = 8, message = "Username must be at least 8 characters")
+    @Size(min = 5, message = "Username must be at least 5 characters")
     String username;
+    @Size(min = 8, message = "Password must be at least 8 characters")
     String password;
     String firstName;
     String lastName;
