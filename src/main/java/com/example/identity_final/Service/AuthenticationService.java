@@ -5,16 +5,14 @@ import com.example.identity_final.dto.request.AuthenticationRequest;
 import com.example.identity_final.dto.response.AuthenticationResponse;
 import com.example.identity_final.exception.AppException;
 import com.example.identity_final.exception.ErrorCode;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSObject;
-import com.nimbusds.jose.Payload;
+import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.weaver.ast.Var;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +22,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -77,7 +76,15 @@ public class AuthenticationService {
 
         //ki token: voi khoa bi mat, co the dung khoa cong khai
         //cung cap khoa bi mat: 32byte 256bit: ban dau: len trang web gerenrate
-        jwsObject.sign(new MACSigner(SIGNER_KEY));
+        try {
+            jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
+            // Chuyển đối tượng JWSObject thành chuỗi JWT đã được ký (signed JWT string) và trả về chuỗi đó.
+            return jwsObject.serialize();
+            //Nếu khóa quá ngắn hoặc có lỗi khi ký → sẽ ném JOSEException.
+        } catch (JOSEException e) {
+            log.error("Cannot create token", e);
+            throw new RuntimeException(e);
+        }
 
     }
 }
