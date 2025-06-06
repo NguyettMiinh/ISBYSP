@@ -8,6 +8,7 @@ import com.example.identity_final.exception.ErrorCode;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.Payload;
 import com.nimbusds.jwt.JWTClaimsSet;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -63,8 +64,10 @@ public class AuthenticationService {
                 )) //xac dinh tgian het han token
                 .claim("customClaim","custom")
                 .build();
+        //payload
+        Payload payload = new Payload(jwtClaimsSet.toJSONObject()); //convert payload ve json
         //jwt object can 2 param: header va payload
-        JWSObject jwsObject = new JWSObject();
+        JWSObject jwsObject = new JWSObject(header, payload);
 
     }
 }
