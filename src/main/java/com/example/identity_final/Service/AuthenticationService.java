@@ -54,7 +54,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(token)
                 .authentication(true)
-                .build()
+                .build();
 
 
     }
