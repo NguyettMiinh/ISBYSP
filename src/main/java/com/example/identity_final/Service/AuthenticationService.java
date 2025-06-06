@@ -49,6 +49,13 @@ public class AuthenticationService {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
 
+        //tao token neu dang nhap thanh cong
+        var token = generateToken(request.getUsername());
+        return AuthenticationResponse.builder()
+                .token(token)
+                .authentication(true)
+                .build()
+
 
     }
 
