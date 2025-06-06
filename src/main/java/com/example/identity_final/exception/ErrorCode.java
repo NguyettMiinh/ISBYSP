@@ -12,7 +12,8 @@ public enum ErrorCode {
     USERNAME_INVALID(403,"username must be at least 5 characters"),
     PASSWORD_INVALID(404,"Password must be at least 8 characters"),
     INVALID_KEY(405,"Invalid key."),
-    USER_NOT_EXISTED(406,"user not existed");
+    USER_NOT_EXISTED(406,"user not existed"),
+    UNAUTHENTICATED(407, "unauthenticated");
     //define error code and message
     private int code;
     private String message;

@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthenticationResponse {
+    String token; // luu token tu server de tra ve cho user (FE)
     //true cc dung username va password
     boolean authentication;
 }
