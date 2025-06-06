@@ -9,10 +9,12 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.Payload;
+import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import org.aspectj.weaver.ast.Var;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +30,9 @@ import java.util.Date;
 public class AuthenticationService {
     //lay thong tin user
     UserRepository userRepository;
+    //co dung cho cho khac nua
+    @NonFinal // ko inject vao constructor
+    protected static final String SIGNER_KEY = "v0yKrFkJyREX/RXFr4vr8exjiOawBMySpWNWKBQBZcIqNzpTR9GuMRss4CKNe4Cd";
 
     public AuthenticationResponse authenticate(AuthenticationRequest request){
         //lay thong tin user
@@ -68,6 +73,11 @@ public class AuthenticationService {
         Payload payload = new Payload(jwtClaimsSet.toJSONObject()); //convert payload ve json
         //jwt object can 2 param: header va payload
         JWSObject jwsObject = new JWSObject(header, payload);
+
+
+        //ki token: voi khoa bi mat, co the dung khoa cong khai
+        //cung cap khoa bi mat: 32byte 256bit: ban dau: len trang web gerenrate
+        jwsObject.sign(new MACSigner(SIGNER_KEY));
 
     }
 }
