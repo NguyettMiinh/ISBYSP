@@ -2,22 +2,28 @@ package com.example.identity_final.Service;
 
 import com.example.identity_final.Repository.UserRepository;
 import com.example.identity_final.dto.request.AuthenticationRequest;
+import com.example.identity_final.dto.request.IntrospectRequest;
 import com.example.identity_final.dto.response.AuthenticationResponse;
+import com.example.identity_final.dto.response.IntrospectResponse;
 import com.example.identity_final.exception.AppException;
 import com.example.identity_final.exception.ErrorCode;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.weaver.ast.Var;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -31,8 +37,32 @@ public class AuthenticationService {
     UserRepository userRepository;
     //co dung cho cho khac nua
     @NonFinal // ko inject vao constructor
-    protected static final String SIGNER_KEY = "v0yKrFkJyREX/RXFr4vr8exjiOawBMySpWNWKBQBZcIqNzpTR9GuMRss4CKNe4Cd";
+    @Value("${jwt.signerKey}") // doc bien tu file yaml
+    protected String SIGNER_KEY;
 
+    //xac thuc token
+    public IntrospectResponse introspect(IntrospectRequest request)
+        throws  JOSEException, ParseException {
+        var token = request.getToken();
+
+        //khởi tạo đối tượng dùng để xác minh.
+        //Nó giống như việc bạn chuẩn bị một cây bút để ký, nhưng chưa ký gì cả.
+        JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+        //dùng verifier để kiểm tra chữ ký của token.
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        //check xem token het han chua
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        //tra ve true false
+        var verified = signedJWT.verify(verifier);
+
+        return IntrospectResponse.builder()
+                .valid(verified && expiryTime.after(new Date())) // tgian het han sau thoi diem hien tai
+                .build();
+
+
+    }
     public AuthenticationResponse authenticate(AuthenticationRequest request){
         //lay thong tin user
         // bien var la bien noi suy: tuc no se tu noi suy kieu tra ve

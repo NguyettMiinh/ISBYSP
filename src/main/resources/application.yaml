@@ -21,5 +21,6 @@ spring:
     user:
       name: admin
       password: 123456
-
+jwt:
+  signerKey: "v0yKrFkJyREX/RXFr4vr8exjiOawBMySpWNWKBQBZcIqNzpTR9GuMRss4CKNe4Cd"
 
