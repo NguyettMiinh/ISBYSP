@@ -56,7 +56,6 @@ public class AuthenticationService {
                 .authentication(true)
                 .build();
 
-
     }
 
     //tao method generate token: chi can thong tin username o thoi diem hien tai
