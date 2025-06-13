@@ -12,14 +12,17 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final String[] PUBLIC_ENDPOINT = {
+            "/users","/auth/login","/auth/introspect"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         //nhung endpoint can bao ve, nhung endpoint ko can bao ve ma cho qua luon
         //dung method de cofig nhung request
         httpSecurity.authorizeHttpRequests(request ->
                 //cho phep truy cap ko can security
-                request.requestMatchers(HttpMethod.POST, "/users").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/login","/auth/introspect").permitAll()
+                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT).permitAll()
                         //con lai phai xac thuc
                         .anyRequest().authenticated());
         //tat csrf
