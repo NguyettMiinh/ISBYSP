@@ -19,6 +19,7 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(request ->
                 //cho phep truy cap ko can security
                 request.requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login","/auth/introspect").permitAll()
                         //con lai phai xac thuc
                         .anyRequest().authenticated());
         //tat csrf
