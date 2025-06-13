@@ -4,22 +4,27 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 //noi cau hinh he thong
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/**").permitAll() // Cho phép POST /login không cần auth
-                        .anyRequest().authenticated() // Các endpoint khác thì cần xác thực
-                )
-                .formLogin(form -> form.disable());
-        return http.build();
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        //nhung endpoint can bao ve, nhung endpoint ko can bao ve ma cho qua luon
+        //dung method de cofig nhung request
+        httpSecurity.authorizeHttpRequests(request ->
+                //cho phep truy cap ko can security
+                request.requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        //con lai phai xac thuc
+                        .anyRequest().authenticated());
+        //tat csrf
+        httpSecurity.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
+
+        return httpSecurity.build();
     }
 
 }
