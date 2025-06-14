@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.time.Instant;
@@ -129,6 +130,19 @@ public class AuthenticationService {
 
     private String buildScope(User user){
         //scope la 1 list
-        StringJoiner stringJoiner = new StringJoiner()
+        //giúp nối nhiều chuỗi lại với nhau, co the them dau phan cach, tien to, hau to
+        StringJoiner stringJoiner = new StringJoiner(" "); //phan cac bang dau cach
+        if (CollectionUtils.isEmpty(user.getRoles())){ //ktra null
+            //Dòng này dùng để lặp qua tất cả các phần tử (role) trong
+            // danh sách user.getRoles() và thêm từng role vào StringJoiner.
+            user.getRoles().forEach(stringJoiner::add);
+//            tuong duong voi:
+//            for (String role : user.getRoles()) {
+//                stringJoiner.add(role);
+//            }
+        }
+// trả về một chuỗi (String) gồm các quyền (role) của người dùng user,
+// được nối với nhau bằng dấu cách (" ").
+        return stringJoiner.toString();
     }
 }
