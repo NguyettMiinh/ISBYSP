@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Data
@@ -26,4 +27,6 @@ public class User {
     String firstName;
     String lastName;
     LocalDate dob;
+    // 1 1 user chua nhieu role , ko trung lap nen dung set
+    Set<String> roles;
 }
