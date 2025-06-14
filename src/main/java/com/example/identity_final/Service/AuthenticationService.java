@@ -83,7 +83,7 @@ public class AuthenticationService {
         }
 
         //tao token neu dang nhap thanh cong
-        var token = generateToken(request.getUsername());
+        var token = generateToken(user);
         return AuthenticationResponse.builder()
                 .token(token)
                 .authentication(true)
@@ -106,7 +106,7 @@ public class AuthenticationService {
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli() //het han trong 1 tieng
                 )) //xac dinh tgian het han token
                 //them role
-                .claim("scope","custom")
+                .claim("scope",buildScope(user))
                 .build();
         //payload
         Payload payload = new Payload(jwtClaimsSet.toJSONObject()); //convert payload ve json
@@ -131,8 +131,9 @@ public class AuthenticationService {
     private String buildScope(User user){
         //scope la 1 list
         //giúp nối nhiều chuỗi lại với nhau, co the them dau phan cach, tien to, hau to
+        log.info("User roles = {}", user.getRoles());
         StringJoiner stringJoiner = new StringJoiner(" "); //phan cac bang dau cach
-        if (CollectionUtils.isEmpty(user.getRoles())){ //ktra null
+        if (!CollectionUtils.isEmpty(user.getRoles())){ //ktra null
             //Dòng này dùng để lặp qua tất cả các phần tử (role) trong
             // danh sách user.getRoles() và thêm từng role vào StringJoiner.
             user.getRoles().forEach(stringJoiner::add);
