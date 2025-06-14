@@ -1,5 +1,6 @@
 package com.example.identity_final.Service;
 
+import com.example.identity_final.Entity.User;
 import com.example.identity_final.Repository.UserRepository;
 import com.example.identity_final.dto.request.AuthenticationRequest;
 import com.example.identity_final.dto.request.IntrospectRequest;
@@ -27,6 +28,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.StringJoiner;
 
 @Slf4j
 @Service
@@ -89,20 +91,21 @@ public class AuthenticationService {
     }
 
     //tao method generate token: chi can thong tin username o thoi diem hien tai
-    private String generateToken(String username) {
+    private String generateToken(User user) {
         //jwt co 3 phan: header, payload, sign
         //tao header: voi thuat toan hs512: de bam
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         //tao payload voi nhung thong tin can thiet
         //DATA TRONG  body dung claim
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username)
+                .subject(user.getUsername())
                 .issuer("nguyetminh.com") //token dc issuer tu dai: tu domain
                 .issueTime(new Date())
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli() //het han trong 1 tieng
                 )) //xac dinh tgian het han token
-                .claim("customClaim","custom")
+                //them role
+                .claim("scope","custom")
                 .build();
         //payload
         Payload payload = new Payload(jwtClaimsSet.toJSONObject()); //convert payload ve json
@@ -122,5 +125,10 @@ public class AuthenticationService {
             throw new RuntimeException(e);
         }
 
+    }
+
+    private String buildScope(User user){
+        //scope la 1 list
+        StringJoiner stringJoiner = new StringJoiner()
     }
 }
