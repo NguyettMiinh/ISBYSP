@@ -17,10 +17,12 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-  security:
-    user:
-      name: admin
-      password: 123456
+
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          secret: ${jwt.signerKey}
 jwt:
   signerKey: "v0yKrFkJyREX/RXFr4vr8exjiOawBMySpWNWKBQBZcIqNzpTR9GuMRss4CKNe4Cd"
 
