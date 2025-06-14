@@ -5,17 +5,17 @@ import com.example.identity_final.Repository.UserRepository;
 import com.example.identity_final.dto.request.UserCreationRequest;
 import com.example.identity_final.dto.request.UserUpdateRequest;
 import com.example.identity_final.dto.response.UserResponse;
+import com.example.identity_final.enums.Role;
 import com.example.identity_final.exception.AppException;
 import com.example.identity_final.exception.ErrorCode;
 import com.example.identity_final.mapper.UserMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -25,6 +25,7 @@ public class UserService {
 
     UserRepository userRepository;
     UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
 
     public UserResponse createUser(UserCreationRequest request) {
         if(userRepository.existsByUsername(request.getUsername())) {
@@ -34,10 +35,14 @@ public class UserService {
         //map du lieu
         User user = userMapper.toUser(request);
         //ma hoa va giai ma duoi 1s
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
         //ma hoa
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
+        HashSet<String> roles = new HashSet<>();
+        roles.add(Role.USER.name()); // // trả về "USER"
+        //tao role cho acc
+        user.setRoles(roles);
         //luu vao trong db
         return userMapper.toUserResponse(userRepository.save(user));
     }
