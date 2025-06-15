@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -42,6 +44,28 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 
         return httpSecurity.build();
+    }
+
+    //config converter
+//    một Bean cấu hình cách Spring Security lấy quyền (roles) từ JWT
+    @Bean
+    JwtAuthenticationConverter jwtAuthenticationConverter(){
+        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+
+        return jwtAuthenticationConverter;
+    /*
+    * Khi Spring đọc JWT (token) từ client gửi lên, nó sẽ dùng JwtAuthenticationConverter để:
+
+            Trích xuất các quyền (roles) từ một claim (cai ma dc truyen vao payload) trong token
+        * (scope).
+
+        Thêm tiền tố ROLE_ vào mỗi quyền để Spring Security hiểu đúng
+        * (vì Spring yêu cầu quyền phải có prefix ROLE_ khi dùng hasRole(...)).
+            * */
+        
     }
 
     @Bean
