@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -58,7 +59,9 @@ public class UserService {
                 .map(userMapper::toUserResponse).toList();
     }
 
+    @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse getUser(Long id) {
+        log.info("In method get user by id");
         return userMapper.toUserResponse(userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("user not found")));
     }
