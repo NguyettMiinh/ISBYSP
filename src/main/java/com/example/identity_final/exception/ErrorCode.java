@@ -15,7 +15,8 @@ public enum ErrorCode {
     PASSWORD_INVALID(404,HttpStatus.BAD_REQUEST,"Password must be at least 8 characters"),
     INVALID_KEY(405, HttpStatus.BAD_REQUEST,"Invalid key."),
     USER_NOT_EXISTED(406,HttpStatus.NOT_FOUND,"user not existed"),
-    UNAUTHENTICATED(407,HttpStatus.UNAUTHORIZED, "unauthenticated");
+    UNAUTHENTICATED(407,HttpStatus.UNAUTHORIZED, "unauthenticated"),
+    UNAUTHORIZED(408,HttpStatus.FORBIDDEN,"You do not have permission");
     //define error code and message
     private int code;
     private HttpStatusCode httpStatusCode;
