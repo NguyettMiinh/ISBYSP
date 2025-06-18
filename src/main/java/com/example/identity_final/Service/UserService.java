@@ -12,12 +12,15 @@ import com.example.identity_final.mapper.UserMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -47,8 +50,10 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    //trc luc goi ham co role la admin ms goi ham dc
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getUsers(){
-
+        log.info("In method get user");
         return userRepository.findAll().stream()
                 .map(userMapper::toUserResponse).toList();
     }
