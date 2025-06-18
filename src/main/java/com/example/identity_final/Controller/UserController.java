@@ -45,8 +45,17 @@ UserService userService;
     }
 
     @GetMapping("/{id}")
-    public UserResponse getUser(@PathVariable("id") Long id){
-        return userService.getUser(id);
+    public ApiResponse<UserResponse> getUser(@PathVariable("id") Long id){
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getUser(id))
+                .build();
+    }
+
+    @GetMapping("/myInfo")
+    public ApiResponse<UserResponse> getMyInfo(){
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getMyInfo())
+                .build();
     }
 
     @PutMapping("/{id}")
